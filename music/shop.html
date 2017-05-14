@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <title>shop</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=3,minimum-scale=1,user-scalable=no,width=device-width">
+    <meta name="format-detection" content="telephone=no,email=no">
+    <link rel="stylesheet" href="css/font-awesome.css">
+    <link rel="stylesheet" href="css/swiper.css">
+    <link rel="stylesheet" href="css/tour.css">
+    <script type="text/javascript" src="js/swiper.js"></script>
+    <script type="text/javascript" src="js/zepto.js"></script>
+    <script type="text/javascript" src="js/touch.js"></script>
+    <script type="text/javascript" src="js/event.js"></script>
+</head>
+<body >
+<header class="header">
+    <a href="#"><img src="kugou/logo.png" alt=""></a>
+    <em>下载酷狗</em>
+    <i><img src="kugou/search.png" alt=""></i>
+
+</header>
+<div class="nav">
+    <ul>
+        <li ng-class="{'bg':num==0}" ng-click="fun(0)"><a href="#/news">新歌</a></li>
+        <li ng-class="{'bg':num==1}" ng-click="fun(1)"><a href="#/among">排行</a></li>
+        <li ng-class="{'bg':num==2}" ng-click="fun(2)"><a href="#/list">歌单</a></li>
+        <li ng-class="{'bg':num==3}" ng-click="fun(3)"><a href="#/singer">歌手</a></li>
+    </ul>
+</div>
+<main class="main" ng-view>
+
+</main>
+<script type="text/javascript" src="js/angular.js"></script>
+<script type="text/javascript" src="js/angular-route.js"></script>
+<script>
+
+    var app=angular.module("app",['ngRoute']);
+        app.config(function($routeProvider){
+            $routeProvider
+                    .when("/news",{templateUrl:"pages/news.html",
+                        controller:function($scope,fun){
+                            $scope.news=fun.data.data
+                                var myswiper = new Swiper(".fs",{
+                                    loop:true,
+                                    autoplay:1800
+                                })
+
+                        },
+                        resolve:{
+                            fun:function($http){
+                                return $http.get("js/music_list.json")
+
+                            }
+                        }
+                   }
+            )
+                    .when("/among",{templateUrl:"pages/among.html",
+
+                    })
+                    .when("/list",{templateUrl:"pages/list.html"})
+                    .when("/singer",{templateUrl:"pages/singer.html",})
+                    .otherwise({redirectTo:'/news'});
+        })
+    app.run(function($rootScope){
+
+        $rootScope.fun=function(pram){
+            $rootScope.num=0;
+            $rootScope.num=pram;
+        }
+    })
+
+
+</script>
+</body>
+</html>
